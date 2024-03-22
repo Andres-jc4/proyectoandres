@@ -77,10 +77,48 @@ class GeneradorController extends Controller
             '1'=>'Enero',
             '2'=>'Febrero',
             '3'=>'Marzo',
-            '3'=>'Marzo',
-            '3'=>'Marzo',
-            '3'=>'Marzo',
-            '3'=>'Marzo',
+            '4'=>'Abril',
+            '5'=>'Mayo',
+            '6'=>'Junio',
+            '7'=>'Julio',
+            '8'=>'Agosto',
+            '9'=>'Septiembre',
+            '10'=>'Octubre',
+            '11'=>'Noviembre',
+            '12'=>'Diciembre',
         ];
+
+        return $meses;
+    }
+
+     public function generar(Request $rq)
+    {
+        $datos=$rq->all();
+        $anl_id=$datos['anl_id'];
+        $jor_id=$datos['jor_id'];
+        $mes=$datos['mes'];
+        //
+     $estudiantes=DB::select("SELECT * FROM matriculas m
+                            JOIN estudiantes e ON m.est_id=e.id
+                            WHERE m.anl_id=$anl_id 
+                            AND m.jor_id=$jor_id 
+                             AND m.mat_estado=1
+                             ");
+  
+
+     
+foreach ($estudiantes as $e) {
+$input['mat_id']=;
+$input['codigo']=;
+$input['fecha_registro']=;
+$input['valor_pagar']=;
+$input['fecha_pago']=;
+$input['valor_pagado']=;
+$input['mat_estadomes']=;
+$input['responsable']=;
+$input['secuencial']=;
+$input['documento']=;
+}
+
     }
 }

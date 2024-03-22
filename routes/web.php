@@ -26,12 +26,15 @@ Route::get('/', function () {
 //EXCEL//
 Route::get('/User',[UsersController::class,'index']);
 Route::get('/user/export',[UsersController::class,'exportExcel'])->name('user.export');
-//USERS//
+//REPORTETECNICOS//
 Route::get('/User',[UsersController::class,'index']);
 Route::post('/user/exports',[UsersController::class,'apiConnect'])->name('api.con');
-//CURSOS//
+//REPORTECULTURALES//
 Route::get('/Cursos',[CursosController::class,'index']);
 Route::post('/Cursos/exports',[CursosController::class,'apiConnect2'])->name('api.conc');
+//GENERADOR//
+Route::post('/generar',[GeneradorController::class,'generar'])->name('generar');
+
 
 // Route::get('/info', [TestController::class,'info'])->name('info');
 // Route::post('/info', [TestController::class,'store'])->name('info');
