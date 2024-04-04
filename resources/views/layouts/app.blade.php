@@ -274,6 +274,15 @@
                 </ul>
               </li>
               
+
+
+                   <li class="sidebar-item"><a class="sidebar-link" href="{{ route('usuarios.index') }}"> 
+                      <svg class="svg-icon svg-icon-sm svg-icon-heavy">
+                        <use xlink:href="#portfolio-grid-1"> </use>
+                      </svg><span>Usuarios</span></a></li>
+
+
+
         </ul>
        
       </nav>

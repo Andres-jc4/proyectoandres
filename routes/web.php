@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CursosController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\GeneradorController;
+use App\Http\Controllers\Usuarios2Controller;
 use App\Models\User;
 use App\Models\Cursos;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -23,6 +24,9 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+
 //EXCEL//
 Route::get('/User',[UsersController::class,'index']);
 Route::get('/user/export',[UsersController::class,'exportExcel'])->name('user.export');
@@ -34,6 +38,10 @@ Route::get('/Cursos',[CursosController::class,'index']);
 Route::post('/Cursos/exports',[CursosController::class,'apiConnect2'])->name('api.conc');
 //GENERADOR//
 Route::post('/generar',[GeneradorController::class,'generar'])->name('generar');
+
+
+
+
 
 
 // Route::get('/info', [TestController::class,'info'])->name('info');
@@ -52,6 +60,11 @@ Route::middleware('auth')->group(function () {
   Route::resource('cursos',CursosController::class);
   Route::resource('users',UsersController::class);
   Route::resource('generador',GeneradorController::class);
+  Route::post('/eliminaOrden',[GeneradorController::class,'eliminaOrden'])->name('eliminarOrden');
+
+
+
+    Route::resource('usuarios',Usuarios2Controller::class);
 });
 
 require __DIR__.'/auth.php';
