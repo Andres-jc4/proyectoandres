@@ -9,14 +9,12 @@ class GenerarOrdenes extends Model
 {
     use HasFactory;
 
-    protected $table = 'ordenes_generadas';
-    
-    protected $primaryKey= 'ord_id';
-    
+
+    protected $table ='ordenes_generadas';
+
+    protected $primaryKey='ord_id';
     public $timestamps = false;
-
-
-    protected $fillable= [
+    protected $fillable = [
         'mat_id',
         'codigo',
         'fecha_registro',
@@ -28,13 +26,9 @@ class GenerarOrdenes extends Model
         'responsable',
         'secuencial',
         'documento',
-
-
     ];
 
-    {
+    public function matricula(){
         return $this->belongsTo(Matricula::class,'mat_id','id');
     }
-
 }
-

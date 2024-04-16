@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use App\Models\GenerarOrdenes;
 use DB;
 use Auth;
 
@@ -143,48 +144,53 @@ class GeneradorController extends Controller
         return $resul;
     }
 
-    public function generar(Request $rq)
-    {
+    public function generar(Request $rq){
         $datos=$rq->all();
-        $anl_id=$datos['anl_id'];
-        $jor_id=$datos['jor_id'];
-        $mes=$datos['mes'];
-        $nmes=$this->mesesLetras($mes);
-        $campus="G";
+        $anl_id=$datos["anl_id"];
+        $jor_id=$datos["jor_id"];
+        $mes=$datos["mes"];
 
-        if(empty($validar)) {
-            $secuenciales = DB::selectOne("SELECT max(secuencial) as secuencial from ordenes_generadas");
-            $sec = $secuenciales->secuencial + 1;
-            $estudiantes = DB::select("SELECT *, m.id as mat_id FROM matriculas m 
-                             JOIN estudiantes e ON m.est_id=e.id 
-                             JOIN jornadas j ON m.jor_id=j.id 
-                             JOIN cursos c ON m.cur_id=c.id 
-                             JOIN especialidades es ON m.esp_id=es.id 
-                             WHERE m.anl_id=$anl_id 
-                             AND m.jor_id=$jor_id 
-                             AND m.mat_estado=1 
-                             ");
+
+        $validar=DB::select("SELECT * FROM ordenes_generadas o
+                            JOIN matriculas m ON m.id=o.mat_id
+                            WHERE m.anl_id=$anl_id
+                            AND m.jor_id=$jor_id
+                            AND o.mes=$mes ");
+
+        if(empty($validar)){
+            $estudiantes=DB::select("SELECT *, m.id as mat_id FROM matriculas m
+                                    JOIN estudiantes e ON m.est_id=e.id
+                                    JOIN jornadas j ON m.jor_id=j.id
+                                    JOIN cursos c ON m.cur_id=c.id
+                                    JOIN especialidades es ON m.esp_id=es.id
+                                    WHERE m.anl_id=$anl_id and m.mat_estado=1 and m.jor_id=$jor_id");
             $valor_pagar=75;
+            $nmes=$this->mesesLetras($mes);
+            $campus="G";
+            
+            $secuenciales=DB::selectone("SELECT max(secuencial) as secuencial from ordenes_generadas");
 
-            foreach ($estudiantes as $e) {
-                $input['mat_id']=$e->mat_id;
-                $input['codigo']=$nmes.$campus.$e->jor_obs.$e->cur_obs.$e->esp_obs."-".$e->mat_id;
-                $input['fecha_registro']= date('Y-m-d');
-                $input['valor_pagar']= $valor_pagar;
-                $input['fecha_pago']= null;
-                $input['valor_pagado']= 0;
-                $input['estado']= 0;
-                $input['mes']= $this->mesesLetras($mes);
-                $input['responsable']= Auth::user()->name;
-                $input['secuencial']= $sec;
-                $input['documento']= null;
-                GeneradorController::create($input);
+            $sec=$secuenciales->secuencial+1;
+            foreach($estudiantes as $e){ 
+
+                $input['mat_id']=$e->mat_id;  //id de la matricula
+                $input['codigo']=$nmes.$campus.$e->jor_obs.$e->cur_obs.$e->esp_obs."-".$e->mat_id;  //MGM3IF-6546
+                $input['fecha_registro']=date('Y-m-d');//
+                $input['valor_pagar']=$valor_pagar;
+                $input['fecha_pago']=null;
+                $input['valor_pagado']=0;     
+                $input['estado']=0;
+                $input['mes']=$mes;
+                $input['responsable']=Auth::user()->username; // Aquí debes proporcionar el ID del usuario
+                $input['secuencial']=$sec; // Asigna un valor para el secuencial
+                $input['documento']=null; // Asigna un valor para el documento
+                GenerarOrdenes::create($input);
+                
             }
-
-            return redirect(route('generador.index'));
-        } else {
-            dd("Ya existe una orden generada con estos datos");
-        }
+            return redirect(route('ordenes.index'));
+        }else{
+            dd("YA EXISTE UNA ORDEN GENERADA CON ESTOS DATOS");
+        } 
     }
 
     public function matricula()
