@@ -61,6 +61,10 @@ Route::middleware('auth')->group(function () {
   Route::resource('users',UsersController::class);
   Route::resource('generador',GeneradorController::class);
   Route::post('/eliminaOrden',[GeneradorController::class,'eliminaOrden'])->name('eliminarOrden');
+  Route::get('/vista_ordenes/{secuencial}', [GeneradorController::class, 'verOrdenes'])->name('vista_ordenes');
+  //EXCELORDENES//
+  Route::get('/generar',[GeneradorController::class,'index']);
+Route::get('/generador/export',[GeneradorController::class,'excelorder'])->name('excelorder');
 
 
 

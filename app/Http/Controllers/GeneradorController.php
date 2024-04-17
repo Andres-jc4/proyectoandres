@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use App\Models\GenerarOrdenes;
+use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Roles;
+use Illuminate\Support\Facades\Http;
+use Maatwebsite\Excel\Facades\Excel;
 use DB;
 use Auth;
 
@@ -187,7 +189,7 @@ class GeneradorController extends Controller
                 GenerarOrdenes::create($input);
                 
             }
-            return redirect(route('ordenes.index'));
+            return redirect(route('generador.index'));
         }else{
             dd("YA EXISTE UNA ORDEN GENERADA CON ESTOS DATOS");
         } 
@@ -204,5 +206,28 @@ class GeneradorController extends Controller
         $secuencial=$dt['secuencial'];
         $ordenes=GeneraOrdenes::where('secuencial',$secuencial)->delete();
     }
+
+       public function verOrdenes($secuencial)
+    {
+    $ordenes = DB::select("SELECT * FROM ordenes_generadas o JOIN matriculas m ON o.mat_id=m.id
+    JOIN estudiantes e ON m.est_id=e.id
+    JOIN jornadas j ON j.id=m.jor_id
+    JOIN cursos c ON c.id=m.cur_id
+    JOIN especialidades esp ON esp.id=m.esp_id
+
+    WHERE secuencial =:secuencial
+    order by e.est_apellidos", ['secuencial' => $secuencial]);
+    $meses = $this->meses(); // Obtener los meses
+    return view('generador.ver_ordenes', compact('ordenes', 'meses')); // Pasar $meses a la vista
+    }
+
+    public function excelorder(){
+       
+return Excel::download(new UserExport ,'Users_excel.xlsx');
+// $response = Http::get('http://192.168.100.92/api/public/api/matriculas/1/16');
+// $data = $response->json();
+// dd($data);
+}
+
 }
 

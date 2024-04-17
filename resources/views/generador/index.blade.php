@@ -61,6 +61,7 @@ if (!function_exists('mesesTexto')) {
     <table class="table">
         <thead>
             <tr>
+
                 <th>Secuencial</th>
                 <th>Fecha</th>
                 <th>Año Lectivo</th>
@@ -78,8 +79,9 @@ if (!function_exists('mesesTexto')) {
                 <td>{{ $o->jor_descripcion }}</td>
                 <td>{{ mesesTexto($o->mes) }}</td>
                 <td>
-                    <a href="" class="btn btn-dark">Ver</a>
+                    <a href="{{ route('vista_ordenes', ['secuencial' => $o->secuencial]) }}" class="btn btn-dark">Ver</a>
                     <a href="" class="btn btn-danger btn_delete" secuencial="{{ $o->secuencial }}">Eliminar</a>
+                    <a href="{{ route('excelorder') }}" class="btn btn-success">EXCEL</a>
                 </td>
             </tr>
             @endforeach
